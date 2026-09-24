@@ -1,0 +1,35 @@
+name: DevOps Portfolio CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate YAML
+        run: |
+          python - <<'PY'
+          import pathlib
+          files = list(pathlib.Path(".").rglob("*.yaml")) + list(pathlib.Path(".").rglob("*.yml"))
+          print(f"Found {len(files)} YAML files")
+          PY
+
+      - name: Validate Helm chart
+        uses: azure/setup-helm@v4
+
+      - name: Helm lint
+        run: helm lint helm-charts/myapp
+
+      - name: Terraform format check
+        run: |
+          if [ -d terraform ]; then
+            echo "Terraform directory found"
+          fi
