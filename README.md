@@ -1,130 +1,203 @@
-# devops-portfolio
-devops-portfolio
+# DevOps Engineer Portfolio — Dipak Mehta
 
-clone the repo
-aws login-cli
-terraform apply
-aws eks --region <region_Name> update-kubeconfig --name <cluster_name>
-kubectl get nodes
+<p align="center">
+  <b>Cloud & DevOps Engineer</b><br/>
+  AWS • Azure • GCP • Kubernetes • Terraform • Docker • CI/CD • Observability • DevSecOps
+</p>
 
-📌 Step 2: Deploy ArgoCD
-1️⃣ Install ArgoCD
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-2️⃣ Expose ArgoCD with Port Forwarding
-kubectl port-forward svc/argocd-server -n argocd 8080:443
-Access ArgoCD UI at https://localhost:8080
-Get the initial ArgoCD password:
-kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d
+<p align="center">
+  <a href="https://github.com/Dipak-Mehta">GitHub</a> •
+  <a href="https://www.linkedin.com/in/dipakmehta/">LinkedIn</a>
+</p>
 
-📌 Step 3: Deploy a Sample Application using Helm
-1️⃣ Create Helm Chart
-mkdir -p devops-portfolio/helm-charts/myapp/templates
-cd devops-portfolio/helm-charts/myapp
+---
 
-🔹 Chart.yaml - Helm Chart Config
-apiVersion: v2
-name: myapp
-description: A simple application deployed using Helm
-version: 0.1.0
+## 👨‍💻 About Me
 
-🔹 values.yaml - Helm Values
-replicaCount: 2
+DevOps Engineer focused on building reliable, secure and automated cloud infrastructure and delivery platforms.
 
-image:
-  repository: nginx
-  tag: latest
-  pullPolicy: IfNotPresent
+I work across **AWS, Azure and GCP**, with hands-on experience in **Kubernetes, Docker, Terraform, CI/CD, networking, monitoring, security and production troubleshooting**.
 
-service:
-  type: LoadBalancer
-  port: 80
-  
-🔹 templates/deployment.yaml - Deployment
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: myapp
-spec:
-  replicas: {{ .Values.replicaCount }}
-  selector:
-    matchLabels:
-      app: myapp
-  template:
-    metadata:
-      labels:
-        app: myapp
-    spec:
-      containers:
-        - name: myapp
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          ports:
-            - containerPort: 80
-            
-🔹 templates/service.yaml - Service
-apiVersion: v1
-kind: Service
-metadata:
-  name: myapp
-spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 80
-  selector:
-    app: myapp
-    
-2️⃣ Install Helm Chart
-helm install myapp ./helm-charts/myapp -n argocd
+### Core strengths
 
-📌 Step 4: Automate Deployment with ArgoCD
-1️⃣ Create an ArgoCD Application
-🔹 argocd/application.yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: myapp
-  namespace: argocd
-spec:
-  destination:
-    namespace: default
-    server: https://kubernetes.default.svc
-  source:
-    repoURL: https://github.com/yourusername/devops-portfolio.git
-    path: helm-charts/myapp
-    targetRevision: HEAD
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-      
-2️⃣ Apply ArgoCD Manifest
-kubectl apply -f argocd/application.yaml -n argocd
+- ☁️ Cloud: AWS, Azure, GCP
+- ☸️ Containers: Kubernetes, EKS, Docker, Docker Compose
+- 🏗️ IaC: Terraform, CloudFormation, Boto3
+- 🚀 CI/CD: GitHub Actions, Jenkins, Argo CD
+- 📊 Observability: Prometheus, Grafana, Loki, CloudWatch, ELK
+- 🔐 Security: IAM, WAF, security groups, CVE remediation, DevSecOps
+- 🌐 Networking: VPC, subnets, routing, load balancers, NAT, VPN
+- 🐧 Linux: Ubuntu, shell scripting, system troubleshooting
+- 🤖 AI/Automation: Python, Ollama, Gemini, automation workflows
 
-ArgoCD will automatically sync the Helm chart and deploy the application.
+---
 
-📌 Step 5: Set Up CI/CD with GitHub Actions
-1️⃣ Create .github/workflows/docker-build.yml
-name: Build and Push Docker Image
+## 🏗️ Portfolio Architecture
 
-on:
-  push:
-    branches:
-      - main
+```text
+                         ┌─────────────────────┐
+                         │      GitHub         │
+                         │  Source / Pull Req  │
+                         └──────────┬──────────┘
+                                    │
+                             GitHub Actions
+                                    │
+                         ┌──────────▼──────────┐
+                         │ Docker Build / Test │
+                         │ Security / Push     │
+                         └──────────┬──────────┘
+                                    │
+                              Container Image
+                                    │
+                    ┌───────────────▼──────────────┐
+                    │          Kubernetes           │
+                    │        EKS / Cluster          │
+                    └───────────────┬──────────────┘
+                                    │
+                              Argo CD / Helm
+                                    │
+                    ┌───────────────▼──────────────┐
+                    │        Application            │
+                    └───────────────┬──────────────┘
+                                    │
+                    ┌───────────────▼──────────────┐
+                    │ Prometheus • Grafana • Loki  │
+                    │ Logs • Metrics • Alerts      │
+                    └──────────────────────────────┘
+```
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+---
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+## 📂 Repository Structure
 
-      - name: Login to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+```text
+devops-portfolio/
+├── .github/workflows/ci.yml
+├── argocd/application.yaml
+├── docker/README.md
+├── docs/architecture.md
+├── helm-charts/myapp/
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   └── templates/
+│       ├── deployment.yaml
+│       └── service.yaml
+├── kubernetes/README.md
+├── monitoring/README.md
+├── security/README.md
+├── scripts/deploy.sh
+├── terraform/README.md
+└── README.md
+```
 
-      - name: Build and push image
-        run: |
-          docker build -t your-dockerhub-username/myapp:latest .
-          docker push your-dockerhub-username/myapp:latest
-This automatically builds and pushes the Docker image when you push code to GitHub.
+---
+
+## 🚀 Featured DevOps Projects
+
+### Kubernetes + Terraform + GitOps
+Infrastructure and application deployment using Terraform, Kubernetes, Helm, Argo CD and GitHub Actions.
+
+**Demonstrates:** Infrastructure as Code, container orchestration, GitOps, CI/CD and automated deployments.
+
+### CITYOS — Intelligent City Operations Platform
+A cloud-native project using Docker, FastAPI, PostgreSQL, Prometheus, Grafana and AI-based analysis.
+
+👉 https://github.com/Dipak-Mehta/cityos
+
+**Demonstrates:** Microservices, observability, Docker Compose, APIs, telemetry and AI integration.
+
+### Cloud & Automation Labs
+Hands-on experiments covering AWS/GCP infrastructure, Terraform, Docker, Kubernetes and automation.
+
+---
+
+## 🔄 CI/CD Flow
+
+```text
+Developer
+   │
+   ▼
+Git Push
+   │
+   ▼
+GitHub Actions
+   ├── Test
+   ├── Security Scan
+   ├── Docker Build
+   └── Image Push
+           │
+           ▼
+      Container Registry
+           │
+           ▼
+        Argo CD
+           │
+           ▼
+      Kubernetes
+           │
+           ▼
+ Monitoring + Alerts
+```
+
+---
+
+## 🧰 Technologies
+
+| Area | Technologies |
+|---|---|
+| Cloud | AWS, Azure, GCP |
+| IaC | Terraform, CloudFormation |
+| Containers | Docker, Docker Compose |
+| Kubernetes | Kubernetes, EKS, Helm |
+| GitOps | Argo CD |
+| CI/CD | GitHub Actions, Jenkins |
+| Monitoring | Prometheus, Grafana |
+| Logging | Loki, ELK, CloudWatch |
+| Security | IAM, WAF, SG/NACL, CVE remediation |
+| Scripting | Bash, Python |
+| OS | Linux / Ubuntu |
+| AI | Ollama, Gemini |
+
+---
+
+## 🎯 What This Repository Shows
+
+This portfolio is organized around the lifecycle of a production DevOps platform:
+
+1. **Provision** infrastructure with Terraform
+2. **Package** applications with Docker
+3. **Deploy** workloads with Kubernetes
+4. **Template** applications with Helm
+5. **Automate** delivery with GitHub Actions
+6. **Synchronize** environments with Argo CD
+7. **Monitor** applications and infrastructure
+8. **Secure** cloud and container workloads
+9. **Document** architecture and operational practices
+
+---
+
+## 📚 DevOps Playbooks
+
+- [Architecture](docs/architecture.md)
+- [Terraform](terraform/README.md)
+- [Kubernetes](kubernetes/README.md)
+- [Docker](docker/README.md)
+- [Monitoring](monitoring/README.md)
+- [Security](security/README.md)
+
+---
+
+## 📈 Engineering Focus
+
+**Build → Automate → Observe → Secure → Improve**
+
+I use this approach to reduce manual operations, improve deployment consistency and make production systems easier to operate.
+
+---
+
+## 📫 Connect
+
+- GitHub: https://github.com/Dipak-Mehta
+- LinkedIn: https://www.linkedin.com/in/dipakmehta/
+
+> This repository is a practical portfolio of DevOps, cloud infrastructure, automation and platform engineering work.
