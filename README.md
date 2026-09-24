@@ -152,8 +152,8 @@ GitHub Actions
 | GitOps | Argo CD |
 | CI/CD | GitHub Actions, Jenkins |
 | Monitoring | Prometheus, Grafana |
-| Logging | Loki, ELK, CloudWatch |
-| Security | IAM, WAF, SG/NACL, CVE remediation |
+| Logging | Loki, CloudWatch |
+| Security | IAM, WAF, SG/NACL |
 | Scripting | Bash, Python |
 | OS | Linux / Ubuntu |
 | AI | Ollama, Gemini |
@@ -198,6 +198,6 @@ I use this approach to reduce manual operations, improve deployment consistency 
 ## 📫 Connect
 
 - GitHub: https://github.com/Dipak-Mehta
-- LinkedIn: https://www.linkedin.com/in/dipakmehta/
+- LinkedIn: https://www.linkedin.com/in/dipak-mehta-devops
 
 > This repository is a practical portfolio of DevOps, cloud infrastructure, automation and platform engineering work.
